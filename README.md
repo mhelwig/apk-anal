@@ -16,9 +16,9 @@ When doing extended analysis with radare2 you might be happy and quickly find re
 
 The script was more or less quickly hacked together and only tested with a handful of malware samples so don't expect too much. You might get the same and even more information using online services like "koodous". Still, it's useful for quick analysis on your local system.
 
-# Why anal?
+# Why apk-"anal"?
 
-Radare2 does most of the anal part, so it's a reference (kind of).
+Because of Radare2 (https://github.com/radare/radare2/tree/master/libr/anal).
 
 # Requirements
 
