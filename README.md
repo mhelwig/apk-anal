@@ -2,7 +2,7 @@
 Android APK analyzer based on radare2 and others.
 
 # What does it do?
-It's an static analys too for APK files based on radare2, apktool and apkid. It tries to quickly determine interesting features like 
+It's an static analys too for APK files based on radare2, apktool and APKiD. It tries to quickly determine interesting features like 
 
 * root detection
 * emulator detection
@@ -21,9 +21,14 @@ The script was more or less quickly hacked together and only tested with a handf
 Because of Radare2 (https://github.com/radare/radare2/tree/master/libr/anal).
 
 # Requirements
-
-* Java in path
-* 
+                                            
+- apktool (https://ibotpeaches.github.io/Apktool/)   
+- radare2 (https://radare.org - use latest from Git) 
+- python-modules: filemagic, r2pipe                  
+- grep with -E option                                
+                                                            
+Optional:                                             
+- APKiD: https://github.com/rednaga/APKiD  
 
 # Usage
 
@@ -57,3 +62,16 @@ optional arguments:
 ```
 
 # Examples
+
+Analyse APK file:
+
+```python apk-anal.py --apktool /opt/apktool_2.2.4.jar example.apk```
+
+Analyse DEX file:
+
+```python apk-anal.py --apktool /opt/apktool_2.2.4.jar -d example.dex```
+
+Extended analysis with radare2:
+
+```python apk-anal.py --extended --apktool /opt/apktool_2.2.4.jar example.apk```
+
