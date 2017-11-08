@@ -22,10 +22,13 @@ Radare2 does most of the anal part, so it's a reference (kind of).
 
 # Requirements
 
+* Java in path
+* 
+
 # Usage
 
-'''
- % python apk-anal.py -h
+```
+% python apk-anal.py -h
 usage: apk-anal.py [-h] [--output OUTPUT] [--dex] [--apktool APKTOOL]
                    [--skip-extraction] [--skip-assets] [--extended]
                    [--cleanup] [--cleanup-before]
@@ -46,9 +49,11 @@ optional arguments:
   --skip-assets         skip asset listing and filetype detection
   --extended            Do extended radare2 analysis. Try to find XREFS. This
                         might take some time.
-  --cleanup             Delete extracted files after completion.
-  --cleanup-before      Cleanup before extraction. WARNING: Deletes contents
+  --cleanup             Delete extracted files after completion. WARNING: Deletes content
                         of output directory.
-'''
+  --cleanup-before      Cleanup before extraction. WARNING: Deletes content
+                        of output directory.
+
+```
 
 # Examples
