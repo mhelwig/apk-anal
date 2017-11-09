@@ -12,9 +12,9 @@ It's an static analys too for APK files based on radare2, apktool and APKiD. It 
 
 etc. Under the hood, it uses radare2 to look for certain strings, methods, symbols and imports in the dex file(s). It also extracts the APK and disassembles it to smali files (using apktool) so you can continue your analysis afterwards.
 
-When doing extended analysis with radare2 you might be happy and quickly find references to interesting method calls or strings and use tools like frida for further dynamic analysis.
+When doing extended analysis (via `--extended` flag) APK-Anal tries to find cross references within the code to show you which methods access certain strings, files, urls etc. so you have a starting point for further analysis.
 
-The script was more or less quickly hacked together and only tested with a handful of malware samples so don't expect too much. You might get the same and even more information using online services like "koodous". Still, it's useful for quick analysis on your local system.
+The script was more or less quickly hacked together and only tested with a handful of malware samples. Don't expect too much. You might get similar information using online services like "koodous". Still, it's useful for quick analysis on your local system.
 
 This script was based on an article by @trufae on analysing APK files with radare2: https://www.nowsecure.com/blog/2016/11/21/android-malware-analysis-radare-triada-trojan/
 
