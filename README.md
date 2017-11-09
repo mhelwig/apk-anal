@@ -8,7 +8,7 @@ It's an static analys too for APK files based on radare2, apktool and APKiD. It 
 * emulator detection
 * unusual files
 * URLs, IPs
-* interesting API access
+* interesting API access (camera, mic, bluetooth, nfc, location, fingerprint...)
 
 etc. Under the hood, it uses radare2 to look for certain strings, methods, symbols and imports in the dex file(s). It also extracts the APK and disassembles it to smali files (using apktool) so you can continue your analysis afterwards.
 
