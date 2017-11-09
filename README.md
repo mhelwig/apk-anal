@@ -10,7 +10,7 @@ It's an static analys too for APK files based on radare2, apktool and APKiD. It 
 * URLs, IPs
 * interesting API access
 
-etc. Under the hood, it uses radare2 to look for certain strings, methods, symbols and imports in the dex file(s). It also extracts the APK and disassembles it to smali files so you can continue your analysis afterwards.
+etc. Under the hood, it uses radare2 to look for certain strings, methods, symbols and imports in the dex file(s). It also extracts the APK and disassembles it to smali files (using apktool) so you can continue your analysis afterwards.
 
 When doing extended analysis with radare2 you might be happy and quickly find references to interesting method calls or strings and use tools like frida for further dynamic analysis.
 
