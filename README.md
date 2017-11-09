@@ -28,7 +28,7 @@ Because of Radare2 (https://github.com/radare/radare2/tree/master/libr/anal).
 - grep with -E option
 - java in path
                                                             
-Optional:                                             
+Optional (but useful):                                             
 - APKiD: https://github.com/rednaga/APKiD  
 
 # Usage
