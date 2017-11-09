@@ -16,6 +16,8 @@ When doing extended analysis with radare2 you might be happy and quickly find re
 
 The script was more or less quickly hacked together and only tested with a handful of malware samples so don't expect too much. You might get the same and even more information using online services like "koodous". Still, it's useful for quick analysis on your local system.
 
+This script was based on an article by @trufae on analysing APK files with radare2: https://www.nowsecure.com/blog/2016/11/21/android-malware-analysis-radare-triada-trojan/
+
 # Why apk-anal?
 
 Because of Radare2 (https://github.com/radare/radare2/tree/master/libr/anal).
@@ -72,7 +74,14 @@ Analyse DEX file:
 
 ```python apk-anal.py --apktool /opt/apktool_2.2.4.jar -d example.dex```
 
-Extended analysis with radare2:
+Extended analysis with radare2 (which gives you XREFS):
 
 ```python apk-anal.py --extended --apktool /opt/apktool_2.2.4.jar example.apk```
 
+[![asciicast](https://asciinema.org/a/146659.png)](https://asciinema.org/a/146659)
+
+# Further development
+
+Please let me know about issues and suggestions for improvements. Search terms can certainly be improved and adjusted.
+
+Feel free to contact me on Twitter ([@c0dmtr1x](https://twitter.com/c0dmtr1x)) or via email (info@codemetrix.net).
