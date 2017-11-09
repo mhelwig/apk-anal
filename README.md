@@ -33,6 +33,10 @@ Because of Radare2 (https://github.com/radare/radare2/tree/master/libr/anal).
 Optional (but useful):                                             
 - APKiD: https://github.com/rednaga/APKiD  
 
+# Installation
+
+Just download the apk-anal.py script. You have to install the requirements yourself.
+
 # Usage
 
 ```
