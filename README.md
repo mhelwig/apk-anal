@@ -25,7 +25,8 @@ Because of Radare2 (https://github.com/radare/radare2/tree/master/libr/anal).
 - apktool (https://ibotpeaches.github.io/Apktool/)   
 - radare2 (https://radare.org - use latest from Git) 
 - python-modules: filemagic, r2pipe                  
-- grep with -E option                                
+- grep with -E option
+- java in path
                                                             
 Optional:                                             
 - APKiD: https://github.com/rednaga/APKiD  
