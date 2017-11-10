@@ -1,25 +1,25 @@
 #!/usr/bin/python
-#-*- coding:UTF-8 -*- 
-	
+#-*- coding:UTF-8 -*-
+
 #
-#                          apk-anal.py                       
-#                     Android APK Analyzer                   
-#     by Michael Helwig (@c0dmtr1x / www.codemetrix.net)     
+#                          apk-anal.py
+#                     Android APK Analyzer
+#     by Michael Helwig (@c0dmtr1x / www.codemetrix.net)
 #
-#                                                            
-#      Basic APK analysis based on radare2 and others        
-#                                                            
-#       Requires:                                            
-#       - apktool (https://ibotpeaches.github.io/Apktool/)   
-#       - radare2 (https://radare.org - use latest from Git) 
-#       - python-modules: filemagic, r2pipe                  
-#       - grep with -E option                                
-#                                                            
-#      Optional:                                             
-#       - APKiD: https://github.com/rednaga/APKiD                                             
-#                                                            
-#      Adjust the path to apktool below                  .   
-#                                                            
+#
+#      Basic APK analysis based on radare2 and others
+#
+#       Requires:
+#       - apktool (https://ibotpeaches.github.io/Apktool/)
+#       - radare2 (https://radare.org - use latest from Git)
+#       - python-modules: filemagic, r2pipe
+#       - grep with -E option
+#
+#      Optional:
+#       - APKiD: https://github.com/rednaga/APKiD
+#
+#      Adjust the path to apktool below                  .
+#
 #
 #      License: LGPLv3
 #
@@ -34,7 +34,7 @@ from xml.dom.minidom import parseString
 apktool=""
 
 # Checks for strings, imports, methods and symbols
-apkchecks =  {"strings":[".apk",".dex"]} 
+apkchecks =  {"strings":[".apk",".dex"]}
 rootchecks=  {"strings":["bin/su", "sudo", "superuser"]}
 apichecks=   {"imports":["nfc", "PackageInstaller", "bluetooth","install","PackageManager","Datagram", "fingerprint"], "methods":["fingerprint","bluetooth","install","package"], "symbols":["fingerprint","bluetooth","install","package"]}
 smschecks =  {"imports":["sms","telephony"],"methods":["sms","telephony","getDeviceId", "getSimOperator", "getSimCountry", "getImei"],"symbols":["sms","telephony","getDeviceId", "getSimOperator", "getSimCountry", "getImei"]}
@@ -83,7 +83,7 @@ def r2_pd_xrefs(address,r2p):
 def analyse(checks,r2p):
     result = {}
     if "strings" in checks:
-        result["strings"] = r2_check_strings(checks["strings"],r2p) 
+        result["strings"] = r2_check_strings(checks["strings"],r2p)
     if "methods" in checks:
         result["methods"] = r2_check_classes_and_methods(checks["methods"],r2p)
     if "imports" in checks:
@@ -92,7 +92,7 @@ def analyse(checks,r2p):
         result["symbols"] = r2_check_symbols(checks["symbols"],r2p)
     return result
 
-# Try to find xrefs 
+# Try to find xrefs
 def r2_get_xrefs(r2_result,result_type,r2p):
     if "vaddr=" in r2_result:
         address = (r2_result.split(" ")[0]).split("=")[1]
@@ -119,8 +119,8 @@ def get_dex_files(directory):
 # Print permission from Manifest
 def print_manifest(manifestpath):
     with open(manifestpath,'r') as f:
-		data = f.read()
-		dom = parseString(data)
+        data = f.read()
+        dom = parseString(data)
                 manifest_nodes = dom.getElementsByTagName('manifest')
                 activity_nodes = dom.getElementsByTagName('activity')
                 service_nodes = dom.getElementsByTagName('service')
@@ -128,11 +128,11 @@ def print_manifest(manifestpath):
 
                 for node in manifest_nodes:
                     print "[*] Package: " + node.getAttribute("package")
-                
+
                 print "\n[*] Activitives:"
                 for node in activity_nodes:
                     print node.getAttribute("android:name")
-                
+
                 print "\n[*] Services:"
                 for node in service_nodes:
                     print node.getAttribute("android:name")
@@ -148,9 +148,9 @@ def print_manifest(manifestpath):
                                  print " -> " + action_node.getAttribute("android:name")
 
                 print "\n[*] Permissions requested: "
-		permission_nodes = dom.getElementsByTagName('uses-permission')
-		for node in permission_nodes:
-		    print node.toxml()
+        permission_nodes = dom.getElementsByTagName('uses-permission')
+        for node in permission_nodes:
+            print node.toxml()
 
 # Output with xrefs
 def print_with_xrefs(r2_results,result_type,r2p):
@@ -178,7 +178,7 @@ def print_results(analysis_results,messages,r2p):
                 print result
         else:
             print messages["not_found"] % key
-           
+
     return
 
 # Argparse
@@ -200,7 +200,7 @@ skip_disassembly = args.skip_extraction or args.dex
 
 if not skip_extraction and apkfile is None:
     print "[!] No file given. Please provide an apkfile (or dexfile with -d option). Use -h for help."
-    exit(1) 
+    exit(1)
 
 if not apktool:
     apktool = args.apktool
@@ -271,7 +271,7 @@ print dexlist
 
 # Dex analysis
 for dexfile in dexlist:
-    
+
     print "\n[***] Analysing " + dexfile + " [***]"
     print "\n[*] Running APKiD "
 
@@ -289,11 +289,11 @@ for dexfile in dexlist:
             print "[*] APKiD not found. Skipping."
         else:
             raise
-    
+
     # Open dex with radare2
     print "\n[*] Opening dexfile with radare2..."
     r2p=r2pipe.open(dexfile)
-    
+
     # Analyse with radare2
     if args.extended:
         print "\n[*] Analyzing with radare2. This might take some time... "
@@ -302,7 +302,7 @@ for dexfile in dexlist:
     # Root detection check
     rootresults = analyse(rootchecks,r2p)
     print_results(rootresults,{"found":"\n[*] Possible root detection found in %s:","not_found":"\n[*] No signs of root detection in %s"},r2p)
-    
+
     # References to APKs and dex files
     apkresults = analyse(apkchecks,r2p)
     print_results(apkresults,{"found":"\n[*] References to apks or dexfiles found in %s:","not_found":"\n[*] No references to apks and dexfiles found in %s"},r2p)
@@ -328,7 +328,7 @@ for dexfile in dexlist:
     print_results(cryptoresults,{"found":"\n[*] Possible crypto stuff found in %s","not_found":"\n[*] No crypto stuff found in %s"},r2p)
 
     # Check for file access
-    fileresults = analyse(filechecks,r2p)     
+    fileresults = analyse(filechecks,r2p)
     print_results(fileresults,{"found":"\n[*] Possible file access / references found in %s","not_found":"\n[*] No file access / references found in %s"},r2p)
 
     # Check for https
@@ -336,9 +336,9 @@ for dexfile in dexlist:
     print_results(httpsresults,{"found":"\n[*] Possible https / certificate references found in %s","not_found":"\n[*] No https / certificate references found in %s"},r2p)
 
     # Check for communication and clients
-    netresults = analyse(netchecks,r2p) 
+    netresults = analyse(netchecks,r2p)
     print_results(netresults,{"found":"\n[*] Possible client / communication keywords found in %s","not_found":"\n[*] No client / communication keywords found in %s"},r2p)
-     
+
     # Check for native library loading
     nativeresults = analyse(nativechecks,r2p)
     print_results(nativeresults,{"found":"\n[*] Possible signs of native library loading found in %s","not_found":"\n[*] No signs of native library loading found in %s"},r2p)
@@ -358,7 +358,7 @@ for dexfile in dexlist:
     # Check for passwords and other interesting strings
     otherresults = analyse(otherchecks,r2p)
     print_results(otherresults,{"found":"\n[*] Further interesting stuff found in %s","not_found":"\n[*] No more interesting things found in %s"},r2p)
- 
+
 print "\n[***] End of dex analysis [***]"
 
 if args.dex:
@@ -377,15 +377,15 @@ else:
 
 # Output assets
 if not args.skip_assets:
-    if os.path.isdir(asset_dir):          
+    if os.path.isdir(asset_dir):
         print "\n[*] Assets found:"
         with magic.Magic() as m:
             for root, dirs, files in os.walk(asset_dir):
                 for file in files:
                     filetype = m.id_filename(os.path.join(root,file))
                     print os.path.join(root,file) + " - " + filetype
-    else:           
-		print "\n[*] No assets found"
+    else:
+        print "\n[*] No assets found"
 
 
 print "\n[*] Looking for interesting filetypes and files:"
@@ -407,17 +407,17 @@ for root, dirs, files in os.walk(extract_dir + "/zip/"):
 if os.path.isdir(zip_dir):
     print "\n[*] Looking for IPv4s in unzipped APK file"
     try:
-        result = subprocess.check_output(["grep","-arnoE","[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", zip_dir]) 
+        result = subprocess.check_output(["grep","-arnoE","[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", zip_dir])
         print result
     except subprocess.CalledProcessError as e:
-	    if e.returncode == 1:
-		    print " -> No results found"
-	    else:
-			print " [!] Error executing grep"
+        if e.returncode == 1:
+            print " -> No results found"
+        else:
+            print " [!] Error executing grep"
     if os.path.isdir(smali_dir + "/res"):
         print "\n[*] Looking for IPv4s in extracted ressources"
         try:
-            result = subprocess.check_output(["grep","-arnoE","[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", smali_dir + "/res"]) 
+            result = subprocess.check_output(["grep","-arnoE","[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", smali_dir + "/res"])
             print result
         except subprocess.CalledProcessError as e:
             if e.returncode == 1:
@@ -458,17 +458,17 @@ if os.path.isdir(zip_dir):
                 print " -> No results found"
             else:
                 print " [!] Error executing grep"
-  
+
 
 # Looking for certificates
 if os.path.isdir(zip_dir):
     print "\n[*] Looking for private / public key files"
-    try: 
+    try:
         result = subprocess.check_output(["grep","-arnoE","(PRIVATE|PUBLIC) KEY", zip_dir])
         print result
     except subprocess.CalledProcessError as e:
-	    if e.returncode != 1:
-		print " [!] Error executing grep"
+        if e.returncode != 1:
+        print " [!] Error executing grep"
             else:
                 print " -> No results found"
 # Cleanup
