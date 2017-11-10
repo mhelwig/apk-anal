@@ -2,7 +2,7 @@
 Android APK analyzer based on radare2 and others.
 
 # What does it do?
-It's an static analys too for APK files based on radare2, apktool and APKiD. It tries to quickly determine interesting features like 
+It's an static analys tool for APK files based on radare2, apktool and APKiD. It tries to quickly determine interesting features like 
 
 * root detection
 * emulator detection
