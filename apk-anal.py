@@ -121,33 +121,33 @@ def print_manifest(manifestpath):
     with open(manifestpath,'r') as f:
         data = f.read()
         dom = parseString(data)
-                manifest_nodes = dom.getElementsByTagName('manifest')
-                activity_nodes = dom.getElementsByTagName('activity')
-                service_nodes = dom.getElementsByTagName('service')
-                receiver_nodes = dom.getElementsByTagName('receiver')
+        manifest_nodes = dom.getElementsByTagName('manifest')
+        activity_nodes = dom.getElementsByTagName('activity')
+        service_nodes = dom.getElementsByTagName('service')
+        receiver_nodes = dom.getElementsByTagName('receiver')
 
-                for node in manifest_nodes:
-                    print "[*] Package: " + node.getAttribute("package")
+        for node in manifest_nodes:
+            print "[*] Package: " + node.getAttribute("package")
 
-                print "\n[*] Activitives:"
-                for node in activity_nodes:
-                    print node.getAttribute("android:name")
+        print "\n[*] Activitives:"
+        for node in activity_nodes:
+            print node.getAttribute("android:name")
 
-                print "\n[*] Services:"
-                for node in service_nodes:
-                    print node.getAttribute("android:name")
+        print "\n[*] Services:"
+        for node in service_nodes:
+            print node.getAttribute("android:name")
 
-                print "\n[*] Receivers:"
-                for node in receiver_nodes:
-                    print node.getAttribute("android:name")
-                    intent_filters = node.getElementsByTagName('intent-filter')
-                    if len(intent_filters) > 0:
-                       for filter_node in intent_filters:
-                            action_nodes = filter_node.getElementsByTagName('action')
-                            for action_node in action_nodes:
-                                 print " -> " + action_node.getAttribute("android:name")
+        print "\n[*] Receivers:"
+        for node in receiver_nodes:
+            print node.getAttribute("android:name")
+            intent_filters = node.getElementsByTagName('intent-filter')
+            if len(intent_filters) > 0:
+               for filter_node in intent_filters:
+                    action_nodes = filter_node.getElementsByTagName('action')
+                    for action_node in action_nodes:
+                         print " -> " + action_node.getAttribute("android:name")
 
-                print "\n[*] Permissions requested: "
+        print "\n[*] Permissions requested: "
         permission_nodes = dom.getElementsByTagName('uses-permission')
         for node in permission_nodes:
             print node.toxml()
@@ -468,9 +468,9 @@ if os.path.isdir(zip_dir):
         print result
     except subprocess.CalledProcessError as e:
         if e.returncode != 1:
-        print " [!] Error executing grep"
-            else:
-                print " -> No results found"
+            print " [!] Error executing grep"
+        else:
+            print " -> No results found"
 # Cleanup
 if args.cleanup:
     print "\n[*] Cleaning up ..."
