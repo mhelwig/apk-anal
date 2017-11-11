@@ -1,0 +1,3 @@
+argparse
+filemagic
+r2pipe
