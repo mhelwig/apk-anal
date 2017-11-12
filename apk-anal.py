@@ -24,6 +24,7 @@
 #      License: LGPLv3
 #
 
+from __future__ import print_function
 import r2pipe
 import sys,os,subprocess
 import shutil,itertools,argparse,zipfile
@@ -127,57 +128,57 @@ def print_manifest(manifestpath):
         receiver_nodes = dom.getElementsByTagName('receiver')
 
         for node in manifest_nodes:
-            print "[*] Package: " + node.getAttribute("package")
+            print("[*] Package: " + node.getAttribute("package"))
 
-        print "\n[*] Activitives:"
+        print("\n[*] Activitives:")
         for node in activity_nodes:
-            print node.getAttribute("android:name")
+            print(node.getAttribute("android:name"))
 
-        print "\n[*] Services:"
+        print("\n[*] Services:")
         for node in service_nodes:
-            print node.getAttribute("android:name")
+            print(node.getAttribute("android:name"))
 
-        print "\n[*] Receivers:"
+        print("\n[*] Receivers:")
         for node in receiver_nodes:
-            print node.getAttribute("android:name")
+            print(node.getAttribute("android:name"))
             intent_filters = node.getElementsByTagName('intent-filter')
             if len(intent_filters) > 0:
                for filter_node in intent_filters:
                     action_nodes = filter_node.getElementsByTagName('action')
                     for action_node in action_nodes:
-                         print " -> " + action_node.getAttribute("android:name")
+                         print(" -> " + action_node.getAttribute("android:name"))
 
-        print "\n[*] Permissions requested: "
+        print("\n[*] Permissions requested: ")
         permission_nodes = dom.getElementsByTagName('uses-permission')
         for node in permission_nodes:
-            print node.toxml()
+            print(node.toxml())
 
 # Output with xrefs
 def print_with_xrefs(r2_results,result_type,r2p):
     for result in r2_results.split("\n"):
         try:
-            print result
+            print(result)
         except UnicodeEncodeError:
-            print result.encode('ascii', 'ignore')
+            print(result.encode('ascii', 'ignore'))
         xrefs = r2_get_xrefs(result,result_type,r2p)
         if xrefs:
             for xref in xrefs.split("\n"):
                 output = xref.lstrip()[1:].lstrip()
                 if(output[0] == ';'):
                      output = output[2:]
-                print " -> " + output
+                print(" -> " + output)
 
 # Output analysis results
 def print_results(analysis_results,messages,r2p):
     for key,result in analysis_results.iteritems():
         if len(result) > 0:
-            print messages["found"] % key
+            print(messages["found"] % key)
             if key in ["strings","symbols","methods"]:
                 print_with_xrefs(result,key,r2p)
             else:
-                print result
+                print(result)
         else:
-            print messages["not_found"] % key
+            print(messages["not_found"] % key)
 
     return
 
@@ -199,14 +200,14 @@ skip_extraction = args.skip_extraction or args.dex
 skip_disassembly = args.skip_extraction or args.dex
 
 if not skip_extraction and apkfile is None:
-    print "[!] No file given. Please provide an apkfile (or dexfile with -d option). Use -h for help."
+    print("[!] No file given. Please provide an apkfile (or dexfile with -d option). Use -h for help.")
     exit(1)
 
 if not apktool:
     apktool = args.apktool
 
 if not apktool or not os.path.isfile(apktool):
-    print "[!] Apktool not found. Please adjust path in script or provide it with --apktool"
+    print("[!] Apktool not found. Please adjust path in script or provide it with --apktool")
     exit(1)
 
 # Setting paths
@@ -223,25 +224,25 @@ asset_dir = extract_dir + "/zip/assets"
 smali_dir = extract_dir + "/smali"
 
 if not args.skip_extraction and os.path.isdir(extract_dir) and os.listdir(extract_dir) != [] and not args.cleanup_before and not args.dex:
-    print "\n[!] " + "Output dir is not empty. Use --cleanup-before to empty output directory."
+    print("\n[!] " + "Output dir is not empty. Use --cleanup-before to empty output directory.")
     sys.exit(1)
 
 
 # Header
 
-print "\n### APK-Anal - Android APK Analyzer (by @c0dmtr1x) ###"
+print("\n### APK-Anal - Android APK Analyzer (by @c0dmtr1x) ###")
 
 # Cleanup before
 if args.cleanup_before:
-    print "\n[*] Cleaning up working_dir..."
+    print("\n[*] Cleaning up working_dir...")
     if(os.path.isdir(extract_dir)):
         shutil.rmtree(extract_dir + "/")
 
 # Extracting APK
-print "\n[*] Extracting to: " + extract_dir
+print("\n[*] Extracting to: " + extract_dir)
 
 if not skip_extraction:
-    print "[*] Extracting APK file as zip"
+    print("[*] Extracting APK file as zip")
     if not os.path.isfile(apkfile):
         sys.exit("APK file not found.")
     zip_ref = zipfile.ZipFile(apkfile, 'r')
@@ -249,54 +250,54 @@ if not skip_extraction:
     zip_ref.close()
 
 if not skip_disassembly:
-    print "[*] Disassembling apkfile with apktool:"
+    print("[*] Disassembling apkfile with apktool:")
     output = subprocess.check_output(["java", "-jar", apktool, "d", apkfile, "-o", smali_dir])
-    print output
+    print(output)
 
 if not args.dex:
     dexlist = get_dex_files(extract_dir + "/zip/")
     if os.path.isfile(smali_dir + "/AndroidManifest.xml"):
        print_manifest(smali_dir + "/AndroidManifest.xml")
     else:
-        print "\n[!] Apktool not found, skipping smali extraction and manifest analysis..."
+        print("\n[!] Apktool not found, skipping smali extraction and manifest analysis...")
 else:
     if args.apkfile and os.path.isfile(args.apkfile):
         dexlist = [args.apkfile]
     else:
-        print "[!] Input file not found. Please provide the correct filepath."
+        print("[!] Input file not found. Please provide the correct filepath.")
         sys.exit(1)
 
-print "\n[*] Found " + str(len(dexlist)) + " dexfiles:"
-print dexlist
+print("\n[*] Found " + str(len(dexlist)) + " dexfiles:")
+print(dexlist)
 
 # Dex analysis
 for dexfile in dexlist:
 
-    print "\n[***] Analysing " + dexfile + " [***]"
-    print "\n[*] Running APKiD "
+    print("\n[***] Analysing " + dexfile + " [***]")
+    print("\n[*] Running APKiD ")
 
     try:
         output = subprocess.check_output(["apkid", dexfile])
-        print output
+        print(output)
         if not "compiler : dx" in output:
-            print "[*] Notice: APKiD detected non-standard dex compiler (e.g. dexlib) - This might indicate malicious / repackaged APKs."
+            print("[*] Notice: APKiD detected non-standard dex compiler (e.g. dexlib) - This might indicate malicious / repackaged APKs.")
         if "anti_vm" in output:
-            print "[*] Notice: APKiD found possible emulator detection (anti-vm)."
+            print("[*] Notice: APKiD found possible emulator detection (anti-vm).")
         if "anti_disassembly" in output:
-            print "[*] Notice: APKiD found anti disassembly measures (anti-disassembly)."
+            print("[*] Notice: APKiD found anti disassembly measures (anti-disassembly).")
     except OSError as e:
         if e.errno == os.errno.ENOENT:
-            print "[*] APKiD not found. Skipping."
+            print("[*] APKiD not found. Skipping.")
         else:
             raise
 
     # Open dex with radare2
-    print "\n[*] Opening dexfile with radare2..."
+    print("\n[*] Opening dexfile with radare2...")
     r2p=r2pipe.open(dexfile)
 
     # Analyse with radare2
     if args.extended:
-        print "\n[*] Analyzing with radare2. This might take some time... "
+        print("\n[*] Analyzing with radare2. This might take some time... ")
         r2_cmd("aad;aan;aas;",r2p)
 
     # Root detection check
@@ -359,36 +360,36 @@ for dexfile in dexlist:
     otherresults = analyse(otherchecks,r2p)
     print_results(otherresults,{"found":"\n[*] Further interesting stuff found in %s","not_found":"\n[*] No more interesting things found in %s"},r2p)
 
-print "\n[***] End of dex analysis [***]"
+print("\n[***] End of dex analysis [***]")
 
 if args.dex:
-    print "\n[*] Done"
+    print("\n[*] Done")
     sys.exit(0)
 
 # Check for native libraries (folders)
 lib_dir = extract_dir + "/zip/" + "lib"
 if os.path.isdir(lib_dir):
-    print "\n[*] Native libraries found:"
+    print("\n[*] Native libraries found:")
     for root, dirs, files in os.walk(lib_dir):
         for file in files:
-            print os.path.join(root,file)
+            print(os.path.join(root,file))
 else:
-    print "\n[*] No native libraries found"
+    print("\n[*] No native libraries found")
 
 # Output assets
 if not args.skip_assets:
     if os.path.isdir(asset_dir):
-        print "\n[*] Assets found:"
+        print("\n[*] Assets found:")
         with magic.Magic() as m:
             for root, dirs, files in os.walk(asset_dir):
                 for file in files:
                     filetype = m.id_filename(os.path.join(root,file))
-                    print os.path.join(root,file) + " - " + filetype
+                    print(os.path.join(root,file) + " - " + filetype)
     else:
-        print "\n[*] No assets found"
+        print("\n[*] No assets found")
 
 
-print "\n[*] Looking for interesting filetypes and files:"
+print("\n[*] Looking for interesting filetypes and files:")
 for root, dirs, files in os.walk(extract_dir + "/zip/"):
     for file in files:
         interesting_types = ["certificate", "serialize", "json", "database"]
@@ -398,82 +399,82 @@ for root, dirs, files in os.walk(extract_dir + "/zip/"):
         with magic.Magic() as m:
             filetype = m.id_filename(filepath)
         if (any(x in filetype.lower() for x in interesting_types) or filetype == "data"):
-            print " " + filepath + " - " + filetype
+            print(" " + filepath + " - " + filetype)
         elif os.path.splitext(filepath) and len(os.path.splitext(filepath)) > 1:
             if any(x in os.path.splitext(filepath)[1].lower() for x in interesting_exts):
-                print " " + filepath + " - " + filetype
+                print(" " + filepath + " - " + filetype)
 
 # Looking for IPs
 if os.path.isdir(zip_dir):
-    print "\n[*] Looking for IPv4s in unzipped APK file"
+    print("\n[*] Looking for IPv4s in unzipped APK file")
     try:
         result = subprocess.check_output(["grep","-arnoE","[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", zip_dir])
-        print result
+        print(result)
     except subprocess.CalledProcessError as e:
         if e.returncode == 1:
-            print " -> No results found"
+            print(" -> No results found")
         else:
-            print " [!] Error executing grep"
+            print(" [!] Error executing grep")
     if os.path.isdir(smali_dir + "/res"):
-        print "\n[*] Looking for IPv4s in extracted ressources"
+        print("\n[*] Looking for IPv4s in extracted ressources")
         try:
             result = subprocess.check_output(["grep","-arnoE","[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", smali_dir + "/res"])
-            print result
+            print(result)
         except subprocess.CalledProcessError as e:
             if e.returncode == 1:
-                print " -> No results found"
+                print(" -> No results found")
             else:
-                print " [!] Error executing grep"
+                print(" [!] Error executing grep")
 
 # Looking for URLs in assets
 if os.path.isdir(zip_dir):
-    print "\n[*] Looking for URLs in unzipped APK file"
+    print("\n[*] Looking for URLs in unzipped APK file")
     try:
         result = subprocess.check_output(["grep","-arnoE","(http|https|file|ftp)://[a-zA-Z0-9?/._=-]+" ,zip_dir])
         filtered = True
         for line in result.split("\n"):
             if not any(x in line for x in filter_urls) and line != "":
-                print line
+                print(line)
                 filtered = False
         if filtered:
-            print " -> No interesting results found (filtered)"
+            print(" -> No interesting results found (filtered)")
     except subprocess.CalledProcessError as e:
         if e.returncode == 1:
-            print " -> No results found"
+            print(" -> No results found")
         else:
-            print " [!] Error executing grep"
+            print(" [!] Error executing grep")
     if os.path.isdir(smali_dir + "/res"):
-        print "\n[*] Looking for URLs in extracted ressources"
+        print("\n[*] Looking for URLs in extracted ressources")
         try:
             result = subprocess.check_output(["grep","-arnoE","(http|https|file|ftp)://[a-zA-Z0-9?/._=-]+", smali_dir + "/res" ])
             filtered = True
             for line in result.split("\n"):
                 if not any(x in line for x in filter_urls) and line != "":
-                    print line
+                    print(line)
                     filtered = False
             if filtered == True:
-                print " -> No interesting results found (filtered)"
+                print(" -> No interesting results found (filtered)")
         except subprocess.CalledProcessError as e:
             if e.returncode == 1:
-                print " -> No results found"
+                print(" -> No results found")
             else:
-                print " [!] Error executing grep"
+                print(" [!] Error executing grep")
 
 
 # Looking for certificates
 if os.path.isdir(zip_dir):
-    print "\n[*] Looking for private / public key files"
+    print("\n[*] Looking for private / public key files")
     try:
         result = subprocess.check_output(["grep","-arnoE","(PRIVATE|PUBLIC) KEY", zip_dir])
-        print result
+        print(result)
     except subprocess.CalledProcessError as e:
         if e.returncode != 1:
-            print " [!] Error executing grep"
+            print(" [!] Error executing grep")
         else:
-            print " -> No results found"
+            print(" -> No results found")
 # Cleanup
 if args.cleanup:
-    print "\n[*] Cleaning up ..."
+    print("\n[*] Cleaning up ...")
     shutil.rmtree(extract_dir)
 
-print "\n[*] Done"
+print("\n[*] Done")
