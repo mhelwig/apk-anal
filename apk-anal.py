@@ -206,7 +206,7 @@ if not skip_extraction and apkfile is None:
 if not apktool:
     apktool = args.apktool
 
-if not apktool or not os.path.isfile(apktool):
+if (not apktool or not os.path.isfile(apktool)) and not args.dex:
     print("[!] Apktool not found. Please adjust path in script or provide it with --apktool")
     exit(1)
 
