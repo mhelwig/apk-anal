@@ -26,7 +26,7 @@ Because of Radare2 (https://github.com/radare/radare2/tree/master/libr/anal).
                                             
 - apktool (https://ibotpeaches.github.io/Apktool/)   
 - radare2 (https://radare.org - use latest from Git) 
-- python-modules: filemagic, r2pipe                  
+- python-modules: filemagic, r2pipe, argparse
 - grep with -E option
 - java in path
                                                             
@@ -36,6 +36,10 @@ Optional (but useful):
 # Installation
 
 Just download the apk-anal.py script. You have to install the requirements yourself.
+
+You should be able to install the python requirements via the requirements.txt file:
+
+```pip install -r requirements.txt```
 
 # Usage
 
