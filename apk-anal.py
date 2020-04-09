@@ -170,7 +170,7 @@ def print_with_xrefs(r2_results,result_type,r2p):
 
 # Output analysis results
 def print_results(analysis_results,messages,r2p):
-    for key,result in analysis_results.iteritems():
+    for key,result in analysis_results.items():
         if len(result) > 0:
             print(messages["found"] % key)
             if key in ["strings","symbols","methods"]:
