@@ -26,7 +26,7 @@
 
 from __future__ import print_function
 import r2pipe
-import sys,os,subprocess
+import sys,os,subprocess,errno
 import shutil,itertools,argparse,zipfile
 import magic
 from xml.dom.minidom import parseString
@@ -52,7 +52,7 @@ emulatorchecks = {"imports":["EmulatorDetector"], "strings":["google_sdk","init.
 otherchecks = {"strings":["api_key","password","pass","admin","secret","encrypt","decrypt"],"methods":["password","pass","admin","secret","encrypt","decrypt"]}
 
 # Filter (only for urls in assets at the moment)
-filter_urls = ["http://schemas.android.com/"]
+filter_urls = [b"http://schemas.android.com/"]
 
 # Radare2 wrapper functions
 def r2_check(strings,r2p,r2cmd):
@@ -170,7 +170,7 @@ def print_with_xrefs(r2_results,result_type,r2p):
 
 # Output analysis results
 def print_results(analysis_results,messages,r2p):
-    for key,result in analysis_results.iteritems():
+    for key,result in analysis_results.items():
         if len(result) > 0:
             print(messages["found"] % key)
             if key in ["strings","symbols","methods"]:
@@ -286,7 +286,7 @@ for dexfile in dexlist:
         if "anti_disassembly" in output:
             print("[*] Notice: APKiD found anti disassembly measures (anti-disassembly).")
     except OSError as e:
-        if e.errno == os.errno.ENOENT:
+        if e.errno == errno.ENOENT:
             print("[*] APKiD not found. Skipping.")
         else:
             raise
@@ -432,8 +432,8 @@ if os.path.isdir(zip_dir):
     try:
         result = subprocess.check_output(["grep","-arnoE","(http|https|file|ftp)://[a-zA-Z0-9?/._=-]+" ,zip_dir])
         filtered = True
-        for line in result.split("\n"):
-            if not any(x in line for x in filter_urls) and line != "":
+        for line in result.split(b"\n"):
+            if not any(x in line for x in filter_urls) and line != b"":
                 print(line)
                 filtered = False
         if filtered:
@@ -448,7 +448,7 @@ if os.path.isdir(zip_dir):
         try:
             result = subprocess.check_output(["grep","-arnoE","(http|https|file|ftp)://[a-zA-Z0-9?/._=-]+", smali_dir + "/res" ])
             filtered = True
-            for line in result.split("\n"):
+            for line in result.split(b"\n"):
                 if not any(x in line for x in filter_urls) and line != "":
                     print(line)
                     filtered = False
