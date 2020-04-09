@@ -52,7 +52,7 @@ emulatorchecks = {"imports":["EmulatorDetector"], "strings":["google_sdk","init.
 otherchecks = {"strings":["api_key","password","pass","admin","secret","encrypt","decrypt"],"methods":["password","pass","admin","secret","encrypt","decrypt"]}
 
 # Filter (only for urls in assets at the moment)
-filter_urls = ["http://schemas.android.com/"]
+filter_urls = [b"http://schemas.android.com/"]
 
 # Radare2 wrapper functions
 def r2_check(strings,r2p,r2cmd):
@@ -432,8 +432,8 @@ if os.path.isdir(zip_dir):
     try:
         result = subprocess.check_output(["grep","-arnoE","(http|https|file|ftp)://[a-zA-Z0-9?/._=-]+" ,zip_dir])
         filtered = True
-        for line in result.split("\n"):
-            if not any(x in line for x in filter_urls) and line != "":
+        for line in result.split(b"\n"):
+            if not any(x in line for x in filter_urls) and line != b"":
                 print(line)
                 filtered = False
         if filtered:
@@ -448,7 +448,7 @@ if os.path.isdir(zip_dir):
         try:
             result = subprocess.check_output(["grep","-arnoE","(http|https|file|ftp)://[a-zA-Z0-9?/._=-]+", smali_dir + "/res" ])
             filtered = True
-            for line in result.split("\n"):
+            for line in result.split(b"\n"):
                 if not any(x in line for x in filter_urls) and line != "":
                     print(line)
                     filtered = False
