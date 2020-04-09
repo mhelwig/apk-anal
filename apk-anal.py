@@ -26,7 +26,7 @@
 
 from __future__ import print_function
 import r2pipe
-import sys,os,subprocess
+import sys,os,subprocess,errno
 import shutil,itertools,argparse,zipfile
 import magic
 from xml.dom.minidom import parseString
@@ -286,7 +286,7 @@ for dexfile in dexlist:
         if "anti_disassembly" in output:
             print("[*] Notice: APKiD found anti disassembly measures (anti-disassembly).")
     except OSError as e:
-        if e.errno == os.errno.ENOENT:
+        if e.errno == errno.ENOENT:
             print("[*] APKiD not found. Skipping.")
         else:
             raise
